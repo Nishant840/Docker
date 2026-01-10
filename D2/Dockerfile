@@ -2,12 +2,15 @@ FROM node:20
 
 WORKDIR /app
 
-COPY . .
+# since package doesn't change often so it's better to cached it
+COPY package* .
+COPY ./prisma .
 
 RUN npm install
-RUN npm run build
 RUN npx prisma generate
 
+COPY . .
+RUN npm run build
 EXPOSE 3000
 
 CMD ["node", "dist/index.js"]
